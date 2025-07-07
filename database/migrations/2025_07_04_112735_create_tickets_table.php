@@ -9,7 +9,7 @@ class CreateTicketsTable extends Migration
     public function up()
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->id0;
+            $table->id();
             $table->string('titre');
             $table->text('description');
             $table->text('piece_jointe')->nullable();
