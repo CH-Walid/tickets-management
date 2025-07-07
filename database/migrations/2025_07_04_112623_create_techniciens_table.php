@@ -18,7 +18,7 @@ return new class extends Migration
        
             // Contrainte de clé étrangère
             $table->foreign('id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('service_id')->references('id')->on('service')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
