@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('techniciens', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->string('code_unique')->unique();
+            $table->uuid('code_unique')->default(\Illuminate\Support\Str::uuid());
             $table->unsignedBigInteger('service_id');
-       
+
             // Contrainte de clé étrangère
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('service_id')->references('id')->on('services')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

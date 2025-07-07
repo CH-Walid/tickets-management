@@ -12,10 +12,14 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenom');
-            $table->longtext('img')->nullable();
+            $table->text('img')->nullable();
+            $table->string('phone')->nullable();
             $table->string('email')->unique();
+            // always avoiding deleting the default laravel columns
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
             $table->string('password');
-            $table->enum('role', ['user', 'admin', 'chef', 'tech']); 
+            $table->enum('role', ['user', 'admin', 'chef', 'tech'])->default('user');
             $table->timestamps();
         });
     }

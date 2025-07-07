@@ -15,7 +15,7 @@ return new class extends Migration
              $table->unsignedBigInteger('id')->primary();
 
             // Contrainte de clé étrangère
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

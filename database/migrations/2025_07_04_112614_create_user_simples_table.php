@@ -14,8 +14,12 @@ return new class extends Migration
         Schema::create('user_simples', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();// Clé étrangère vers users
 
+
             // Contrainte de clé étrangère
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+
+            // you did forget that user have a foreign key with services table!!!!
+            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

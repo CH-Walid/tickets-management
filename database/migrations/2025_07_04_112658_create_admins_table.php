@@ -11,7 +11,8 @@ class CreateAdminsTable extends Migration
         Schema::create('admins', function (Blueprint $table) {
              $table->unsignedBigInteger('id')->primary();
 
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            // avoid using onDelete("cascade"); couse you can miss write cascase!!
+            $table->foreign('id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

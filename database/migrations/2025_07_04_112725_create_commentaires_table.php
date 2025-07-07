@@ -11,10 +11,10 @@ class CreateCommentairesTable extends Migration
         Schema::create('commentaires', function (Blueprint $table) {
             $table->id();
             $table->text('content');
-            $table->foreignId('technicien_id')->constrained('techniciens')->onDelete('cascade');
-            $table->foreignId('ticket_id')->constrained('tickets')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreignId('technicien_id')->constrained('techniciens')->onDelete('cascade')->cascadeOnUpdate();
+            $table->foreignId('ticket_id')->constrained('tickets')->onDelete('cascade')->cascadeOnUpdate();
             $table->unique(['technicien_id', 'ticket_id']);
+            $table->timestamps();
         });
     }
 
