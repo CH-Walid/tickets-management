@@ -14,7 +14,10 @@ class UserSimple extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
 
-    protected $fillable = ['service_id'];
+    protected $fillable = [
+        'id',
+        'service_id'
+    ];
 
     public function user()
     {

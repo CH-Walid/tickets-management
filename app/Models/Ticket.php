@@ -9,10 +9,19 @@ class Ticket extends Model
 {
     use HasFactory;
 
+    // we do not need to include created_at, deleted_at
     protected $fillable = [
-        'titre', 'description', 'piece_jointe', 'status', 'priorite',
-        'created_at', 'in_progress_at', 'resolved_at',
-        'closed_at', 'deleted_at', 'user_simple_id', 'technicien_id', 'categorie'
+        'titre',
+        'description',
+        'piece_jointe',
+        'status',
+        'priorite',
+        'in_progress_at',
+        'resolved_at',
+        'closed_at',
+        'user_simple_id',
+        'technicien_id',
+        'categorie_id'
     ];
 
     public function userSimple()
@@ -32,6 +41,6 @@ class Ticket extends Model
 
     public function categorie()
     {
-        return $this->belongsTo(Category::class, 'categorie');
+        return $this->belongsTo(Categorie::class, 'categorie');
     }
 }

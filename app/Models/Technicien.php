@@ -16,7 +16,8 @@ class Technicien extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
 
-    protected $fillable = ['code', 'service_id'];
+    // we do not need code here since it's generated automatically using uuid
+    protected $fillable = ['id', 'service_id'];
 
     public function user()
     {
@@ -39,5 +40,5 @@ class Technicien extends Model
     }
 
 
-    
+
 }

@@ -13,12 +13,12 @@ class Service extends Model
 
     public function techniciens()
     {
-        return $this->hasMany(Technicien::class);
+        return $this->hasMany(Technicien::class, 'service_id');
     }
 
     public function userSimples()
     {
-        return $this->hasMany(UserSimple::class);
+        return $this->hasMany(UserSimple::class, 'service_id');
     }
-    
+
 }

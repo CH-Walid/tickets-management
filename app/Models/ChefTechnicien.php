@@ -8,11 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class ChefTechnicien extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'chef_techniciens';
     public $timestamps = false;
     protected $primaryKey = 'id';
     public $incrementing = false;
+
+    protected $fillable = [
+        'id',
+    ];
 
     public function user()
     {

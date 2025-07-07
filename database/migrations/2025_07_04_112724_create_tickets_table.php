@@ -26,7 +26,7 @@ class CreateTicketsTable extends Migration
             // if the technicien asigned to a ticket got deleted do not delete the ticket
             $table->foreignId('technicien_id')->nullable()->constrained('techniciens')->nullOnDelete()->cascadeOnUpdate();
             // if the category is deleted do not delete tickets from the same category
-            $table->foreignId('categorie')->nullable()->constrained('categories')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('categorie_id')->nullable()->constrained('categories')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 
