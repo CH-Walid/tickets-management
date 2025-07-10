@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RolesEnum;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -37,21 +38,34 @@ Route::middleware(['guest'])->group(function () {
 
 // Dashboard de l'utilisateur simple
 Route::middleware(['auth'])->group(function () {
-    Route::get('/user/dashboard', function () {
-        return 'Bienvenue sur le dashboard utilisateur simple (vue non encore créée).';
-    })->name('user.dashboard');
 
-    Route::get('/admin/dashboard', function () {
-        return 'Dashboard admin (non créé)';
-    })->name('admin.dashboard');
-    
-    Route::get('/chef/dashboard', function () {
-        return 'Dashboard chef (non créé)';
-    })->name('chef.dashboard');
-    
-    Route::get('/tech/dashboard', function () {
-        return 'Dashboard technicien (non créé)';
-    })->name('tech.dashboard');
+    Route::middleware(['role:'.RolesEnum::USER_SIMPLE->value])->group(function () {
+        Route::get('/user/dashboard', function () {
+            return 'Bienvenue sur le dashboard utilisateur simple.';
+        })->name('user.dashboard');
+    });
+
+
+    Route::middleware(['role:'.RolesEnum::ADMIN->value])->group(function () {
+        Route::get('/admin/dashboard', function () {
+            return 'Bienvenue sur le dashboard administrateur.';
+        })->name('admin.dashboard');
+    });
+
+
+    Route::middleware(['role:'.RolesEnum::CHEF_TECHNICIEN->value])->group(function () {
+        Route::get('/chef/dashboard', function () {
+            return 'Bienvenue sur le dashboard chef.';
+        })->name('chef.dashboard');
+    });
+
+
+    Route::middleware(['role:'.RolesEnum::TECHNICIEN->value])->group(function () {
+        Route::get('/tech/dashboard', function () {
+            return 'Bienvenue sur le dashboard technicien.';
+        })->name('tech.dashboard');
+    });
+
 });
 
 
