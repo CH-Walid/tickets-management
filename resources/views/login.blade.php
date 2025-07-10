@@ -17,13 +17,33 @@
         <p class="mt-2 text-sm text-gray-600">Connectez-vous pour continuer</p>
       </div>
 
-      <form class="mt-8 space-y-6" action="#" method="POST">
+      {{-- Message de succès après inscription --}}
+      @if(session('success'))
+        <div class="text-sm text-green-600 bg-green-100 px-4 py-2 rounded">
+          {{ session('success') }}
+        </div>
+      @endif
+
+      {{-- Affichage des erreurs --}}
+      @if ($errors->any())
+        <div class="text-sm text-red-600 bg-red-100 px-4 py-2 rounded">
+          <ul class="list-disc pl-5">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
+
+      <form class="mt-8 space-y-6" action="{{ route('login') }}" method="POST">
+        @csrf
+
         <div class="-space-y-px rounded-md shadow-sm">
           <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700">Adresse e-mail</label>
             <input id="email" name="email" type="email" autocomplete="email" required
               class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              placeholder="ex: nom.prenom@mmsp.gov.ma">
+              placeholder="ex: nom.prenom@mmsp.gov.ma" value="{{ old('email') }}">
           </div>
 
           <div>
@@ -57,7 +77,8 @@
 
         <div class="text-center mt-4">
           <p class="text-sm text-gray-600">Pas encore de compte ?
-          <a href="{{ route('register') }}" class="mt-2 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-500">Créer un compte</a></p>
+            <a href="{{ route('register') }}" class="inline-block text-sm font-medium text-indigo-600 hover:text-indigo-500">Créer un compte</a>
+          </p>
         </div>
       </form>
     </div>
