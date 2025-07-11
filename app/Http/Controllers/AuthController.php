@@ -15,9 +15,9 @@ class AuthController extends Controller
 
     protected $redirects = [
         'admin' => 'admin.dashboard',
-        'chef' => 'chef.dashboard',
-        'tech' => 'tech.dashboard',
-        'user' => 'user.dashboard',
+        'chef_technicien' => 'chef.dashboard',
+        'technicien' => 'tech.dashboard',
+        'user_simple' => 'user.dashboard',
     ];
 
     // Affiche le formulaire de connexion
@@ -36,7 +36,12 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
-            return redirect()->route($this->redirects[$user->role] ?? '/');
+            // Check if user role has a specific dashboard, otherwise redirect to home
+            if (isset($this->redirects[$user->role])) {
+                return redirect()->route($this->redirects[$user->role]);
+            } else {
+                return redirect()->route('home');
+            }
         }
 
         return back()->withErrors([
