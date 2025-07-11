@@ -14,10 +14,10 @@ class AuthController extends Controller
 {
 
     protected $redirects = [
-        RolesEnum::ADMIN->value                  => 'admin.dashboard',
-        RolesEnum::CHEF_TECHNICIEN->value        => 'chef.dashboard',
-        RolesEnum::TECHNICIEN->value             => 'tech.dashboard',
-        RolesEnum::USER_SIMPLE->value            => 'user.dashboard',
+        'admin' => 'admin.dashboard',
+        'chef' => 'chef.dashboard',
+        'tech' => 'tech.dashboard',
+        'user' => 'user.dashboard',
     ];
 
     // Affiche le formulaire de connexion
