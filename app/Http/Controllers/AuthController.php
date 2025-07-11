@@ -14,11 +14,11 @@ class AuthController extends Controller
 {
 
     protected $redirects = [
-    'admin' => 'admin.dashboard',
-    'chef' => 'chef.dashboard',
-    'tech' => 'tech.dashboard',
-    'user' => 'user.dashboard',
-];
+        'admin' => 'admin.dashboard',
+        'chef' => 'chef.dashboard',
+        'tech' => 'tech.dashboard',
+        'user' => 'user.dashboard',
+    ];
 
     // Affiche le formulaire de connexion
     public function showLoginForm() {
