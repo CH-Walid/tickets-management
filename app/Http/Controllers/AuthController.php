@@ -35,6 +35,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
             $user = Auth::user();
+            $user->last_login_at = now();
+            $user->save();
 
             // Check if user role has a specific dashboard, otherwise redirect to home
             if (isset($this->redirects[$user->role])) {
@@ -83,6 +85,6 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect('/login');
     }
 }

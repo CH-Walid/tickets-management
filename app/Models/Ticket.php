@@ -41,6 +41,11 @@ class Ticket extends Model
 
     public function categorie()
     {
-        return $this->belongsTo(Categorie::class, 'categorie');
+        return $this->belongsTo(Categorie::class, 'categorie_id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id');
     }
 }
