@@ -9,7 +9,9 @@ class Categorie extends Model
 {
     use HasFactory;
 
-     protected $fillable = ['titre'];
+     protected $fillable = [
+        'titre',
+       'is_official'];
 
     public function tickets()
     {

@@ -17,6 +17,21 @@ class DatabaseSeeder extends Seeder
         \App\Models\Service::create(['titre' => 'Service RH']);
         \App\Models\Service::create(['titre' => 'Service COM']);
 
+         \App\Models\Categorie::create(['titre' => 'Réseau']);
+        \App\Models\Categorie::create(['titre' => 'Matériel']);
+        \App\Models\Categorie::create(['titre' => 'Logiciel']);
+        \App\Models\Categorie::create(['titre' => 'Sécurité']);
+        \App\Models\Categorie::create(['titre' => 'Comptabilité']);
+        \App\Models\Categorie::create(['titre' => 'Ressources humaines']);
+        \App\Models\Categorie::create(['titre' => 'Bureau / Admin']);
+        \App\Models\Categorie::create(['titre' => 'Demande d’accès']);
+        \App\Models\Categorie::create(['titre' => 'Développement']);
+        \App\Models\Categorie::create(['titre' => 'Maintenance']);
+        \App\Models\Categorie::create(['titre' => 'Téléphonie']);
+        \App\Models\Categorie::create(['titre' => 'Autre', 'is_official' => false]);             
+
+        
+
         \App\Models\User::factory(10)->create();
 
         \App\Models\User::factory()->create([
@@ -30,7 +45,7 @@ class DatabaseSeeder extends Seeder
             [
                 'nom' => 'user',
                 'prenom' => 'user',
-                'email' => 'user@gmail.com',
+                'email' => 'p',
                 'password' => Hash::make("123456")
             ]
         )->userSimple()->create([
@@ -47,15 +62,13 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        \App\Models\User::create(
-            [
-                'nom' => 'chef',
-                'prenom' => 'chef',
-                'email' => 'chef@gmail.com',
-                'password' => Hash::make("123456"),
-                'role' => RolesEnum::CHEF_TECHNICIEN->value
-            ]
-        );
+        \App\Models\User::create([
+            'nom' => 'moujdidi',
+            'prenom' => 'dounia',
+            'email' => 'dounia@gmail.com',
+            'password' => Hash::make("123456789"),
+            'role' => RolesEnum::CHEF_TECHNICIEN->value
+        ])->chefTechnicien()->create(); 
 
         \App\Models\User::create(
             [
@@ -68,6 +81,8 @@ class DatabaseSeeder extends Seeder
         )->technicien()->create([
             'service_id' => 1,
         ]);
+        
+        
 
     }
 }
