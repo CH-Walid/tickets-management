@@ -14,6 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        
+        
+        \App\Models\Categorie::create(['titre' => 'Panne matérielle']);
+        \App\Models\Categorie::create(['titre' => 'Problème logiciel']);
+        \App\Models\Categorie::create(['titre' => 'Demande d accès']);
+        \App\Models\Categorie::create(['titre' => 'Problème réseau']);
+        \App\Models\Categorie::create(['titre' => 'Autre']);
         \App\Models\Service::create(['titre' => 'Service RH']);
         \App\Models\Service::create(['titre' => 'Service COM']);
 
