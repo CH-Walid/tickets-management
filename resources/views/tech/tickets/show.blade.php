@@ -9,10 +9,16 @@
 
 <div class="max-w-3xl mx-auto p-6 mt-10 bg-white shadow rounded">
 
-    {{-- ✅ Message flash de succès --}}
+    {{-- ✅ Message flash --}}
     @if(session('success'))
         <div class="mb-4 p-4 rounded bg-green-100 text-green-800 border border-green-300">
             {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-4 p-4 rounded bg-red-100 text-red-800 border border-red-300">
+            {{ session('error') }}
         </div>
     @endif
 
@@ -88,20 +94,24 @@
             @endforelse
         </div>
 
-        {{-- Formulaire d'ajout de commentaire --}}
-        <div class="mt-6">
-            <form action="{{ route('tickets.commenter', $ticket->id) }}" method="POST">
-                @csrf
-                <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Ajouter un commentaire</label>
-                <textarea name="content" id="content" rows="3"
-                          class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring focus:ring-indigo-300"
-                          required></textarea>
-                <button type="submit"
-                        class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                    Commenter
-                </button>
-            </form>
-        </div>
+        {{-- Formulaire d'ajout de commentaire (une seule fois) --}}
+        @if (! $ticket->commentaires->where('technicien_id', auth()->id())->count())
+            <div class="mt-6">
+                <form action="{{ route('tickets.commenter', $ticket->id) }}" method="POST">
+                    @csrf
+                    <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Ajouter un commentaire</label>
+                    <textarea name="content" id="content" rows="3"
+                              class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring focus:ring-indigo-300"
+                              required></textarea>
+                    <button type="submit"
+                            class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                        Commenter
+                    </button>
+                </form>
+            </div>
+        @else
+            <p class="mt-4 text-sm text-gray-500 italic">Vous avez déjà commenté ce ticket.</p>
+        @endif
     </div>
 </div>
 

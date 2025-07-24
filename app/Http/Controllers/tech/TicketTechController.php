@@ -19,18 +19,19 @@ class TicketTechController extends Controller
     // 🔍 Détails d’un ticket
     public function show($id)
     {
-        $ticket = Ticket::with('categorie') // 👈 eager load the 'categorie' relationship
-        ->where('technicien_id', auth()->id())
-        ->findOrFail($id);
+        $ticket = Ticket::with(['categorie', 'commentaires.technicien'])
+            ->where('technicien_id', auth()->id())
+            ->findOrFail($id);
+
         return view('tech.tickets.show', compact('ticket'));
     }
 
     // ✏️ Modifier (statut uniquement)
     public function edit($id)
     {
-        $ticket = Ticket::with('categorie') // 👈 eager load the 'categorie' relationship
-        ->where('technicien_id', auth()->id())
-        ->findOrFail($id);
+        $ticket = Ticket::with('categorie')
+            ->where('technicien_id', auth()->id())
+            ->findOrFail($id);
 
         return view('tech.tickets.edit', compact('ticket'));
     }
@@ -51,26 +52,73 @@ class TicketTechController extends Controller
                          ->with('success', 'Le ticket a été mis à jour avec succès.');
     }
 
-    // 🗨️ Ajouter un commentaire
+    // 🗨️ Ajouter un commentaire (une seule fois par ticket)
     public function commenter(Request $request, $id)
     {
-        if (!$request->isMethod('post')) {
-            abort(405, 'Méthode non autorisée');
-        }
-
         $request->validate([
             'content' => 'required|string|max:2000',
         ]);
 
         $ticket = Ticket::where('technicien_id', auth()->id())->findOrFail($id);
 
+        $dejaCommentaire = $ticket->commentaires()
+            ->where('technicien_id', auth()->id())
+            ->exists();
+
+        if ($dejaCommentaire) {
+            return redirect()->route('tickets.show', $ticket->id)
+                             ->with('error', 'Vous avez déjà commenté ce ticket.');
+        }
+
         Commentaire::create([
-            'content' => $request->input('content'),
+            'contenu' => $request->input('content'),
             'ticket_id' => $ticket->id,
             'technicien_id' => auth()->id(),
         ]);
 
         return redirect()->route('tickets.show', $ticket->id)
                          ->with('success', 'Commentaire ajouté avec succès.');
+    }
+
+    // ✏️ Formulaire pour modifier un commentaire
+    public function editCommentaire($id)
+    {
+        $commentaire = Commentaire::where('id', $id)
+            ->where('technicien_id', auth()->id())
+            ->firstOrFail();
+
+        return view('tech.commentaires.edit', compact('commentaire'));
+    }
+
+    // 💾 Sauvegarder la modification du commentaire
+    public function updateCommentaire(Request $request, $id)
+    {
+        $request->validate([
+            'content' => 'required|string|max:2000',
+        ]);
+
+        $commentaire = Commentaire::where('id', $id)
+            ->where('technicien_id', auth()->id())
+            ->firstOrFail();
+
+        $commentaire->contenu = $request->input('content');
+        $commentaire->save();
+
+        return redirect()->route('tickets.show', $commentaire->ticket_id)
+                         ->with('success', 'Commentaire modifié avec succès.');
+    }
+
+    // ❌ Supprimer un commentaire
+    public function deleteCommentaire($id)
+    {
+        $commentaire = Commentaire::where('id', $id)
+            ->where('technicien_id', auth()->id())
+            ->firstOrFail();
+
+        $ticketId = $commentaire->ticket_id;
+        $commentaire->delete();
+
+        return redirect()->route('tickets.show', $ticketId)
+                         ->with('success', 'Commentaire supprimé.');
     }
 }

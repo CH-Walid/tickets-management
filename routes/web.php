@@ -57,13 +57,19 @@ Route::middleware(['auth'])->group(function () {
             return 'Bienvenue sur le dashboard technicien.';
         })->name('tech.dashboard');
 
-        // Gestion des tickets
+        // 📌 Gestion des tickets
         Route::get('/tech/tickets', [TicketTechController::class, 'index'])->name('tickets.index');
         Route::get('/tech/tickets/{id}', [TicketTechController::class, 'show'])->name('tickets.show');
         Route::get('/tech/tickets/{id}/edit', [TicketTechController::class, 'edit'])->name('tickets.edit');
         Route::put('/tech/tickets/{id}', [TicketTechController::class, 'update'])->name('tickets.update');
 
-        // ✅ Route pour commenter un ticket (corrigée)
+        // ✅ Ajout d'un commentaire
         Route::post('/tech/tickets/{id}/commenter', [TicketTechController::class, 'commenter'])->name('tickets.commenter');
+
+        // ✅ Mise à jour d’un commentaire existant
+        Route::put('/tech/commentaires/{id}', [TicketTechController::class, 'updateCommentaire'])->name('commentaires.update');
+
+        // ✅ Suppression d’un commentaire existant
+        Route::delete('/tech/commentaires/{id}', [TicketTechController::class, 'deleteCommentaire'])->name('commentaires.destroy');
     });
 });
