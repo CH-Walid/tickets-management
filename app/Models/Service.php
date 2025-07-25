@@ -21,4 +21,16 @@ class Service extends Model
         return $this->hasMany(UserSimple::class, 'service_id');
     }
 
+    public function tickets()
+    {
+        return $this->hasManyThrough(
+            Ticket::class,
+            UserSimple::class,
+            'service_id', // Foreign key on user_simples
+            'user_simple_id', // Foreign key on tickets
+            'id', // Local key on services
+            'id' // Local key on user_simples
+        );
+    }
+
 }

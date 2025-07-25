@@ -11,7 +11,44 @@ use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
+    public function getPhotoAttribute($value)
+    {
+        if (empty($value) || $value === 'avatars/default.png' || $value === 'avatars/default.jpg') {
+            return null;
+        }
+        return $value;
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->photo) {
+            return asset('storage/' . $this->photo);
+        }
+        return asset('images/default-avatar.png'); // À créer dans public/images
+    }
+
+
     use HasApiTokens, HasFactory, Notifiable;
+
+    
+    
+    
+    public function technicien()
+    {
+        return $this->hasOne(Technicien::class, 'id');
+    }
+    public function admin()
+    {
+        return $this->hasOne(Admin::class, 'id');
+    }
+    public function chefTechnicien()
+    {
+        return $this->hasOne(ChefTechnicien::class, 'id');
+    }
+    public function userSimple()
+    {
+        return $this->hasOne(UserSimple::class, 'id');
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +60,7 @@ class User extends Authenticatable
         'prenom',
         'email',
         'password',
-        'img',
+        'photo',
         'phone',
         'role',
         'password_token',
@@ -45,29 +82,11 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    /*protected $casts = [
+    protected $casts = [
         'email_verified_at' => 'datetime',
-    ]; */
-
-    public function admin()
-    {
-        return $this->hasOne(Admin::class, 'id');
-    }
-
-    public function chefTechnicien()
-    {
-        return $this->hasOne(ChefTechnicien::class, 'id');
-    }
-
-    public function technicien()
-    {
-        return $this->hasOne(Technicien::class, 'id');
-    }
-
-    public function userSimple()
-    {
-        return $this->hasOne(UserSimple::class, 'id');
-    }
+        'password_changed_at' => 'datetime',
+        'last_login_at' => 'datetime',
+    ];
 
 
 

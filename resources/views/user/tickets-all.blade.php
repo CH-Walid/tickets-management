@@ -42,7 +42,12 @@
                     </svg>
                     Filtrer
                 </button>
+
+            
             </form>
+
+            <!-- TODO: ADD NEW TICKET BUTTON -->
+
         </div>
 
         <!-- Tableau des tickets -->

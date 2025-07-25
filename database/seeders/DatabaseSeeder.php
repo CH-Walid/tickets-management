@@ -14,10 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        
+        
+        
         \App\Models\Service::create(['titre' => 'Service RH']);
         \App\Models\Service::create(['titre' => 'Service COM']);
 
-         \App\Models\Categorie::create(['titre' => 'Réseau']);
+        \App\Models\Categorie::create(['titre' => 'Réseau']);
         \App\Models\Categorie::create(['titre' => 'Matériel']);
         \App\Models\Categorie::create(['titre' => 'Logiciel']);
         \App\Models\Categorie::create(['titre' => 'Sécurité']);
@@ -30,15 +33,13 @@ class DatabaseSeeder extends Seeder
         \App\Models\Categorie::create(['titre' => 'Téléphonie']);
         \App\Models\Categorie::create(['titre' => 'Autre', 'is_official' => false]);             
 
-        
-
-        \App\Models\User::factory(10)->create();
-
         \App\Models\User::factory()->create([
             'nom' => 'User',
             'prenom' => 'User',
             'email' => 'test@example.com',
             'password' => Hash::make('password')
+        ])->userSimple()->create([
+            'service_id' => 2,
         ]);
 
         \App\Models\User::create(
@@ -60,7 +61,7 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make("123456"),
                 'role' => RolesEnum::ADMIN->value
             ]
-        );
+        )->admin()->create();
 
         \App\Models\User::create([
             'nom' => 'moujdidi',

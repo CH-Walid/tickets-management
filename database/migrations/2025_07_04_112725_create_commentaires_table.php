@@ -10,10 +10,24 @@ class CreateCommentairesTable extends Migration
     {
         Schema::create('commentaires', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
-            $table->foreignId('technicien_id')->constrained('techniciens')->onDelete('cascade')->cascadeOnUpdate();
-            $table->foreignId('ticket_id')->constrained('tickets')->onDelete('cascade')->cascadeOnUpdate();
+
+            // ✅ Champ texte pour le contenu du commentaire
+            $table->text('contenu');
+
+            // 🔗 Liens vers technicien et ticket
+            $table->foreignId('technicien_id')
+                  ->constrained('techniciens')
+                  ->onDelete('cascade')
+                  ->cascadeOnUpdate();
+
+            $table->foreignId('ticket_id')
+                  ->constrained('tickets')
+                  ->onDelete('cascade')
+                  ->cascadeOnUpdate();
+
+            // ⚠️ Contraintes uniques : un seul commentaire par technicien par ticket
             $table->unique(['technicien_id', 'ticket_id']);
+
             $table->timestamps();
         });
     }
@@ -22,5 +36,4 @@ class CreateCommentairesTable extends Migration
     {
         Schema::dropIfExists('commentaires');
     }
-};
-
+}

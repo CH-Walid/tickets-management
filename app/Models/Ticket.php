@@ -11,7 +11,7 @@ class Ticket extends Model
     use HasFactory;
     use SoftDeletes;
 
-    // we do not need to include created_at, deleted_at
+    // Liste des champs pouvant être remplis en masse
     protected $fillable = [
         'titre',
         'description',
@@ -26,23 +26,32 @@ class Ticket extends Model
         'categorie_id'
     ];
 
+    // 🔗 Relation avec l'utilisateur simple (créateur du ticket)
     public function userSimple()
     {
         return $this->belongsTo(UserSimple::class, 'user_simple_id');
     }
 
+    // 🔗 Relation avec le technicien assigné
     public function technicien()
     {
         return $this->belongsTo(Technicien::class, 'technicien_id');
     }
 
+    // 🔗 Relation avec la catégorie du ticket
+    public function categorie()
+    {
+        return $this->belongsTo(Categorie::class, 'categorie_id'); 
+    }
+
+    // 🔗 Relation avec les commentaires du ticket
     public function commentaires()
     {
         return $this->hasMany(Commentaire::class);
     }
 
-    public function categorie()
+    public function service()
     {
-        return $this->belongsTo(Categorie::class, 'categorie_id');
+        return $this->belongsTo(Service::class, 'service_id');
     }
 }
