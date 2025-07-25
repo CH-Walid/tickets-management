@@ -17,7 +17,7 @@
                         class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow">
                         Ajouter Tech
                     </a>
-                    <form method="GET" action="{{ route('techniciens.export.pdf') }}">
+                    <form method="GET" action="{{ route('chef.techniciens.export.pdf') }}">
                         <button type="submit"
                             class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow">
                             Exporter PDF

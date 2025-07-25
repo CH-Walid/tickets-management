@@ -193,7 +193,7 @@ public function allTickets(Request $request)
     }
 
     $tickets = $query->latest()->paginate(4)->withQueryString();
-     $techniciens = \App\Models\Technicien::with('user')->get();
+    $techniciens = \App\Models\Technicien::with('user')->get();
 
 
    return view('chef.ticket_all', compact('tickets', 'techniciens'));

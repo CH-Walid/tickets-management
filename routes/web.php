@@ -119,7 +119,7 @@ Route::middleware(['auth'])->group(function () {
     // ===== Chef Technicien =====
     Route::middleware(['role:' . RolesEnum::CHEF_TECHNICIEN->value])->prefix('chef')->name('chef.')->group(function () {
         Route::get('/dashboard', [ChefTicketController::class, 'dashboard'])->name('dashboard');
-        Route::get('/tickets-all', [ChefTicketController::class, 'ticketsAll'])->name('tickets.all');
+        Route::get('/tickets-all', [ChefTicketController::class, 'allTickets'])->name('tickets.all');
         Route::get('/tickets/{id}/edit', [ChefTicketController::class, 'edit'])->name('tickets.edit');
         Route::put('/tickets/{id}', [ChefTicketController::class, 'update'])->name('tickets.update');
         Route::delete('/tickets/{id}', [ChefTicketController::class, 'destroy'])->name('tickets.destroy');
