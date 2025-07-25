@@ -39,7 +39,7 @@
                 <span class="sidebar-text transition-opacity duration-300">Tableau de bord</span>
             </a>
 
-            <a href="{{route('chef.dashboard')}}" class="px-4 py-2 mx-2 rounded-lg cursor-pointer flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <a href="{{route('user.profile.show')}}" class="px-4 py-2 mx-2 rounded-lg cursor-pointer flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                 <i class="fas fa-user w-5 h-5 flex-shrink-0"></i>
                 <span class="sidebar-text transition-opacity duration-300">Profile</span>
             </a>
