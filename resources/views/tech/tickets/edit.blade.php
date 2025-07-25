@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Modifier le Ticket</title>
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
 
-<div class="max-w-3xl mx-auto p-6 mt-10 bg-white shadow rounded">
+@section('title', 'Dashboard - Système de Gestion des Incidents')
+
+@section('content')
+
+<div class="mt-24 max-w-3xl mx-auto p-6 bg-white shadow rounded">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Modifier le Ticket</h1>
 
     {{-- ✅ Message de succès ou erreur --}}
@@ -103,5 +100,4 @@
     @endif
 </div>
 
-</body>
-</html>
+@extends('layouts.app')

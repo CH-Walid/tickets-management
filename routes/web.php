@@ -99,7 +99,7 @@ Route::middleware(['auth'])->group(function () {
         })->name('tech.dashboard');
 
         Route::get('/tech/tickets', [TicketTechController::class, 'index'])->name('tickets.index');
-        Route::get('/tech/tickets/{id}', [TicketTechController::class, 'show'])->name('tickets.show');
+        Route::get('/tech/tickets/{id}', [TicketTechController::class, 'show'])->name('tech.tickets.show');
         Route::get('/tech/tickets/{id}/edit', [TicketTechController::class, 'edit'])->name('tickets.edit');
         Route::put('/tech/tickets/{id}', [TicketTechController::class, 'update'])->name('tickets.update');
 

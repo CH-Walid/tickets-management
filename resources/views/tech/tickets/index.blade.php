@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Mes tickets</title>
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+
+@section('title', 'Dashboard - Système de Gestion des Incidents')
+
+@section('content')
 
     <div class="max-w-6xl mx-auto p-6">
         <h1 class="text-3xl font-bold text-gray-800 mb-6">Tickets assignés</h1>
@@ -50,7 +47,7 @@
                             </td>
 
                             <td class="px-6 py-4 flex gap-2">
-                                <a href="{{ route('tickets.show', $ticket->id) }}" class="text-blue-600 hover:underline">Voir</a>
+                                <a href="{{ route('tech.tickets.show', $ticket->id) }}" class="text-blue-600 hover:underline">Voir</a>
                                 <a href="{{ route('tickets.edit', $ticket->id) }}" class="text-indigo-600 hover:underline">Modifier</a>
                             </td>
                         </tr>
@@ -64,5 +61,4 @@
         </div>
     </div>
 
-</body>
-</html>
+@endsection

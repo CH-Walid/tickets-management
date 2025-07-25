@@ -48,7 +48,7 @@ class TicketTechController extends Controller
         $ticket->status = $validated['status'];
         $ticket->save();
 
-        return redirect()->route('tickets.show', $ticket->id)
+        return redirect()->route('tech.tickets.show', $ticket->id)
                          ->with('success', 'Le ticket a été mis à jour avec succès.');
     }
 
@@ -66,7 +66,7 @@ class TicketTechController extends Controller
             ->exists();
 
         if ($dejaCommentaire) {
-            return redirect()->route('tickets.show', $ticket->id)
+            return redirect()->route('tech.tickets.show', $ticket->id)
                              ->with('error', 'Vous avez déjà commenté ce ticket.');
         }
 
@@ -76,7 +76,7 @@ class TicketTechController extends Controller
             'technicien_id' => auth()->id(),
         ]);
 
-        return redirect()->route('tickets.show', $ticket->id)
+        return redirect()->route('tech.tickets.show', $ticket->id)
                          ->with('success', 'Commentaire ajouté avec succès.');
     }
 
@@ -104,7 +104,7 @@ class TicketTechController extends Controller
         $commentaire->contenu = $request->input('content');
         $commentaire->save();
 
-        return redirect()->route('tickets.show', $commentaire->ticket_id)
+        return redirect()->route('tech.tickets.show', $commentaire->ticket_id)
                          ->with('success', 'Commentaire modifié avec succès.');
     }
 
@@ -118,7 +118,7 @@ class TicketTechController extends Controller
         $ticketId = $commentaire->ticket_id;
         $commentaire->delete();
 
-        return redirect()->route('tickets.show', $ticketId)
+        return redirect()->route('tech.tickets.show', $ticketId)
                          ->with('success', 'Commentaire supprimé.');
     }
 }

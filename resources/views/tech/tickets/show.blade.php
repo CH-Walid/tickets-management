@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Détails du Ticket</title>
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+
+@section('title', 'Dashboard - Système de Gestion des Incidents')
+
+@section('content')
 
 <div class="max-w-3xl mx-auto p-6 mt-10 bg-white shadow rounded">
 
@@ -115,5 +112,4 @@
     </div>
 </div>
 
-</body>
-</html>
+@endsection
