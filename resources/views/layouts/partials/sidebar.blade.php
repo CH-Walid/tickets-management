@@ -71,7 +71,7 @@
         <span id="supportLabel" class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider transition-opacity duration-300">SUPPORT</span>
     </div>
 
-    <a href="/chat" class="px-4 py-2 mx-2 rounded-lg cursor-pointer flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+    <a href="#" class="px-4 py-2 mx-2 rounded-lg cursor-pointer flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
         <i class="fas fa-comments w-5 h-5 flex-shrink-0"></i>
         <span class="sidebar-text transition-opacity duration-300">Chat</span>
     </a>
