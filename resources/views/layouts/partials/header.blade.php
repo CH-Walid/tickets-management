@@ -24,6 +24,7 @@
 
         <!-- Right: Dark mode toggle + User menu -->
         <div class="flex items-center space-x-4">
+            @if($user->role === 'technicien')
               <!-- Icône notifications -->
               <div class="relative">
     <button id="notifToggle" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg relative focus:outline-none">
@@ -60,6 +61,7 @@
     @endif
 </div>
 </div>
+@endif
 
 
             <button id="darkModeToggle" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">

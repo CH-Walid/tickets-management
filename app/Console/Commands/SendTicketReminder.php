@@ -43,12 +43,12 @@ class SendTicketReminder extends Command
                 $mail->Port = 587;
 
                 $mail->setFrom('douniamoujdidi541@gmail.com', 'Gestion Tickets');
-                 $mail->addAddress($technicien->user->email, $technicien->user->prenom . ' ' . $technicien->user->nom);
+                  $mail->addAddress($technicien->email, $technicien->prenom . ' ' . $technicien->nom);
 
                 $mail->isHTML(true);
-                $mail->Subject = 'Rappel : Tickets non traités';
+                $mail->Subject = 'Alerte : Tickets non traités';
 
-                $mail->Body = "Bonjour {$technicien->user->prenom} {$technicien->user->nom},<br><br>"
+                $mail->Body = "Bonjour {$technicien->prenom} {$technicien->nom},<br><br>"
                       . "Vous avez les tickets suivants non traités depuis plus de 24h :<br><ul>";
 
                 foreach ($ticketsGroup as $ticket) {

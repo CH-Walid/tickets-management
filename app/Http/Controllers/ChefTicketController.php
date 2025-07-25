@@ -140,25 +140,36 @@ class ChefTicketController extends Controller
     }
 
      public function assignTechnicien(Request $request, $id)
-    {
-        $request->validate([
-            'technicien_id' => 'required|exists:users,id',
-        ]);
+{
+    $request->validate([
+        'technicien_id' => 'required|exists:users,id',
+    ]);
 
-        $ticket = Ticket::find($id);
+    $ticket = Ticket::find($id);
+    if (!$ticket) {
+        return redirect()->back()->with('error', 'Ticket non trouvé.');
+    }
 
-        if (!$ticket) {
-            return redirect()->back()->with('error', 'Ticket non trouvé.');
-        }
+    // Récupérer le technicien
+    $technicien = User::find($request->input('technicien_id'));
+    if (!$technicien) {
+        return redirect()->back()->with('error', 'Technicien non trouvé.');
+    }
 
-        $ticket->technicien_id = $request->input('technicien_id');
-        if ($ticket->status === 'nouveau') {
+    $ticket->technicien_id = $technicien->id;
+
+    if ($ticket->status === 'nouveau') {
         $ticket->status = 'en_cours';
     }
-        $ticket->save();
 
-        return redirect()->back()->with('success', 'Technicien assigné avec succès.');
-    }
+    $ticket->save();
+
+    // Maintenant que $technicien existe, on peut envoyer l'email
+    $this->sendAssignEmail($technicien, $ticket);
+
+    return redirect()->back()->with('success', 'Technicien assigné avec succès et email envoyé.');
+}
+
 
 public function allTickets(Request $request)
 {
@@ -211,9 +222,14 @@ public function storeTechnicien(Request $request)
         'prenom' => 'required',
         'email' => 'required|email|unique:users,email',
         'service_id' => 'required|exists:services,id',
+        'img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
     $token = Str::random(60);
+    $imagePath = null;
+    if ($request->hasFile('img')) {
+        $imagePath = $request->file('img')->store('avatars', 'public');
+    }
 
     $user = User::create([
         'nom' => $request->nom,
@@ -222,6 +238,7 @@ public function storeTechnicien(Request $request)
         'role' => 'technicien',
         'password' => Hash::make(Str::random(10)), // mot de passe temporaire obligatoire
         'password_token' => $token,
+        'img' => $imagePath, // enregistre le chemin ou null
     ]);
     $user->technicien()->create([
         'service_id' => $request->service_id,
@@ -275,22 +292,7 @@ private function sendPasswordEmail($email, $token, $prenom, $nom)
         \Log::error("Erreur email : " . $mail->ErrorInfo);
     }
 }
-public function assignTicket(Request $request, $id)
-{
-    $ticket = Ticket::findOrFail($id);
-    $technicien = Technicien::findOrFail($request->technicien_id);
 
-    $ticket->technicien_id = $technicien->id;
-    $ticket->status = 'nouveau';
-
-    $ticket->save();
-
-    
-
-    $this->sendAssignEmail($technicien, $ticket);
-
-    return back()->with('success', 'Ticket assigné et email envoyé');
-}
 
 private function sendAssignEmail($technicien, $ticket)
 {
@@ -305,12 +307,12 @@ private function sendAssignEmail($technicien, $ticket)
         $mail->Port = 587;
 
         $mail->setFrom('douniamoujdidi541@gmail.com', 'Gestion Tickets');
-         $mail->addAddress($technicien->user->email, $technicien->user->prenom . ' ' . $technicien->user->nom);
+        $mail->addAddress($technicien->email, $technicien->prenom . ' ' . $technicien->nom);
 
 
         $mail->isHTML(true);
         $mail->Subject = 'Nouveau ticket assigné';
-       $mail->Body = "Bonjour {$technicien->user->prenom} {$technicien->user->nom},<br><br>"
+       $mail->Body = "Bonjour {$technicien->prenom} {$technicien->nom},<br><br>"
                     . "Un nouveau ticket vous a été assigné : <strong>{$ticket->titre}</strong>.<br>"
                     . "Merci de le traiter rapidement.<br><br>"
                     . "<a href='" . route('tickets.show', $ticket->id) . "'>Voir le ticket</a><br><br>"
@@ -329,6 +331,7 @@ public function show($id)
         // Retourner la vue avec le ticket
         return view('user.ticket-show', compact('ticket'));
     }
+    
 
 }
 

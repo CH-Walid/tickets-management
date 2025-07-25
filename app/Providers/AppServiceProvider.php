@@ -56,7 +56,7 @@ public function boot()
             // Liste complète pour afficher dans dropdown
         $ticketsNonTraites = Ticket::where('technicien_id', $userId)
             ->whereIn('status', ['nouveau', 'en_cours'])
-            ->orderBy('created_at', 'desc')
+             ->orderBy('updated_at', 'desc')
             ->get();
 
         $view->with(compact('countTicketsNonTraites', 'ticketsNonTraites'));
