@@ -179,6 +179,7 @@
                 </div>
                 <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Incident Déclaré !</h3>
                 <p class="text-gray-700 dark:text-gray-300 mb-8">Votre demande a été enregistrée avec succès.</p>
+                <!-- TODO: ADD A BUTTON TO RETURN TO TICKETS LIST -->
                 <button type="button" id="newIncidentBtn"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors">
                     Créer un autre incident
