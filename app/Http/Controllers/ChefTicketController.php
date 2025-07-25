@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -192,7 +193,7 @@ public function allTickets(Request $request)
         });
     }
 
-    $tickets = $query->latest()->paginate(4)->withQueryString();
+    $tickets = $query->latest()->paginate(4);
     $techniciens = \App\Models\Technicien::with('user')->get();
 
 
@@ -289,7 +290,7 @@ private function sendPasswordEmail($email, $token, $prenom, $nom)
 
         $mail->send();
     } catch (Exception $e) {
-        \Log::error("Erreur email : " . $mail->ErrorInfo);
+        Log::error("Erreur email : " . $mail->ErrorInfo);
     }
 }
 
@@ -320,7 +321,7 @@ private function sendAssignEmail($technicien, $ticket)
 
         $mail->send();
     } catch (Exception $e) {
-        \Log::error('Erreur envoi mail assignation: '.$mail->ErrorInfo);
+        Log::error('Erreur envoi mail assignation: '.$mail->ErrorInfo);
     }
 }
 public function show($id)

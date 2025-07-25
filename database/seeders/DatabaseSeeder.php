@@ -61,15 +61,7 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make("123456"),
                 'role' => RolesEnum::ADMIN->value
             ]
-        )->admin()->create();
-
-        \App\Models\User::create([
-            'nom' => 'moujdidi',
-            'prenom' => 'dounia',
-            'email' => 'dounia@gmail.com',
-            'password' => Hash::make("123456789"),
-            'role' => RolesEnum::CHEF_TECHNICIEN->value
-        ])->chefTechnicien()->create(); 
+        )->admin()->create(); 
 
         \App\Models\User::create(
             [
@@ -82,7 +74,51 @@ class DatabaseSeeder extends Seeder
         )->technicien()->create([
             'service_id' => 1,
         ]);
-        
+
+        // TECH
+        \App\Models\User::create(
+            [
+            'nom' => 'anass',
+            'prenom' => 'benheddane',
+            'email' => 'a.benheddane@gmail.com',
+            'password' => Hash::make("a.benheddane@gmail.com"),
+            'role' => RolesEnum::TECHNICIEN->value
+            ]
+        )->technicien()->create([
+            'service_id' => 1,
+        ]);
+
+        // ADMIN
+        \App\Models\User::create(
+            [
+                'nom' => 'chaimae',
+                'prenom' => 'chaimae',
+                'email' => 'chaimae@gmail.com',
+                'password' => Hash::make("chaimae@gmail.com"),
+                'role' => RolesEnum::ADMIN->value
+            ]
+        )->admin()->create();
+
+        // CHEF TECHNICIEN
+        \App\Models\User::create([
+            'nom' => 'dounia',
+            'prenom' => 'dounia',
+            'email' => 'dounia@gmail.com',
+            'password' => Hash::make("dounia@gmail.com"),
+            'role' => RolesEnum::CHEF_TECHNICIEN->value
+        ])->chefTechnicien()->create(); 
+
+        // USER SIMPLE
+        \App\Models\User::create(
+            [
+                'nom' => 'noubaiba',
+                'prenom' => 'noubaiba',
+                'email' => 'noubaiba@gmail.com',
+                'password' => Hash::make("noubaiba@gmail.com")
+            ]
+        )->userSimple()->create([
+            'service_id' => 1,
+        ]);
         
 
     }
