@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Service::create(['titre' => 'Service RH']);
         \App\Models\Service::create(['titre' => 'Service COM']);
 
-         \App\Models\Categorie::create(['titre' => 'Réseau']);
+        \App\Models\Categorie::create(['titre' => 'Réseau']);
         \App\Models\Categorie::create(['titre' => 'Matériel']);
         \App\Models\Categorie::create(['titre' => 'Logiciel']);
         \App\Models\Categorie::create(['titre' => 'Sécurité']);
