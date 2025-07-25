@@ -14,6 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        
+        
+        
         \App\Models\Service::create(['titre' => 'Service RH']);
         \App\Models\Service::create(['titre' => 'Service COM']);
 
