@@ -50,5 +50,8 @@ class Ticket extends Model
         return $this->hasMany(Commentaire::class);
     }
 
-    
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id');
+    }
 }

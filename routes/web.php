@@ -1,12 +1,21 @@
 <?php
 
-use App\Enums\RolesEnum;
 use Illuminate\Support\Facades\Route;
+use App\Enums\RolesEnum;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\ChefTicketController;
 use App\Http\Controllers\TechnicienController;
+use App\Http\Controllers\admin\TicketController as AdminTicketController;
+use App\Http\Controllers\admin\TechnicienController as AdminTechnicienController;
+use App\Http\Controllers\admin\UserSimpleController;
+use App\Http\Controllers\admin\TicketAdminController;
+use App\Http\Controllers\admin\ServiceController;
+use App\Http\Controllers\admin\CategorieController;
+use App\Http\Controllers\admin\StatistiquesController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\tech\TicketTechController;
 
 /*
@@ -17,31 +26,37 @@ use App\Http\Controllers\tech\TicketTechController;
 
 // ==== Authentification ====
 Route::middleware(['guest'])->group(function () {
-
-    // Afficher le formulaire pour définir le mot de passe (avec token)
     Route::get('/techniciens/definir-mot-de-passe/{token}', [TechnicienController::class, 'showPasswordForm'])->name('technicien.password.form');
-
-    // Traiter la soumission du formulaire pour définir le mot de passe
     Route::post('/techniciens/definir-mot-de-passe', [TechnicienController::class, 'storePassword'])->name('technicien.password.store');
 
-    // Formulaire de connexion
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-    
 });
 
-// ==== Redirection page d’accueil ====
+// ==== Redirection d’accueil selon rôle ====
 Route::get('/', function () {
+    if (auth()->check()) {
+        return match (auth()->user()->role) {
+            RolesEnum::ADMIN->value => redirect()->route('admin.dashboard'),
+            RolesEnum::USER_SIMPLE->value => redirect()->route('user.dashboard'),
+            RolesEnum::TECHNICIEN->value => redirect()->route('tech.dashboard'),
+            RolesEnum::CHEF_TECHNICIEN->value => redirect()->route('chef.dashboard'),
+            default => redirect()->route('login'),
+        };
+    }
     return redirect()->route('login');
 })->name('home');
 
-// ==== Dashboards protégés ====
+// ==== Routes protégées ====
 Route::middleware(['auth'])->group(function () {
 
+    // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    // Bloc profil utilisateur
+
+    // ===== Profil utilisateur =====
     Route::prefix('profile')->name('user.profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
@@ -50,64 +65,95 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/image', [ProfileController::class, 'deleteImage'])->name('delete-image');
     });
 
-    // Dashboard utilisateur simple
+    // ===== Utilisateur simple =====
     Route::middleware(['role:' . RolesEnum::USER_SIMPLE->value])->group(function () {
+        Route::get('/user/dashboard', [IncidentController::class, 'dashboard'])->name('user.dashboard');
         Route::get('/user/ticket', [IncidentController::class, 'create'])->name('user.ticket');
         Route::post('/user/ticket', [IncidentController::class, 'store'])->name('incident.store');
-        Route::get('/user/dashboard', [IncidentController::class, 'dashboard'])->name('user.dashboard');
+        Route::get('/tickets/all', [IncidentController::class, 'allTickets'])->name('tickets.all');
         Route::get('/tickets/{id}/edit', [IncidentController::class, 'edit'])->name('tickets.edit');
         Route::put('/tickets/{id}', [IncidentController::class, 'update'])->name('incident.update');
         Route::delete('/tickets/{id}', [IncidentController::class, 'destroy'])->name('tickets.destroy');
-        Route::get('/tickets/all', [IncidentController::class, 'allTickets'])->name('tickets.all');
     });
 
-    // Dashboard admin
-    Route::middleware(['role:' . RolesEnum::ADMIN->value])->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return 'Bienvenue sur le dashboard administrateur.';
-        })->name('admin.dashboard');
+    // ===== Admin =====
+    Route::middleware(['role:' . RolesEnum::ADMIN->value])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminTicketController::class, 'dashboard'])->name('dashboard');
+
+        Route::get('/tickets', fn() => view('admin.tickets'))->name('tickets');
+        Route::get('/search', [AdminTicketController::class, 'search'])->name('search');
+        Route::get('/profil', [AdminTicketController::class, 'profil'])->name('profil');
+        Route::get('/profil/edit', [AdminTicketController::class, 'editProfil'])->name('profil.edit');
+        Route::post('/profil/edit', [AdminTicketController::class, 'updateProfil'])->name('profil.update');
+        Route::get('/parametres', [AdminTicketController::class, 'parametres'])->name('parametres');
+        Route::match(['get', 'post'], '/password', [AdminTicketController::class, 'password'])->name('password');
+
+        Route::get('/techniciens/export', [AdminTechnicienController::class, 'export'])->name('techniciens.export');
+        Route::resource('/techniciens', AdminTechnicienController::class, ['as' => 'techniciens']);
+
+        Route::resource('utilisateurs', UserSimpleController::class);
+        Route::get('utilisateurs/export', [UserSimpleController::class, 'export'])->name('utilisateurs.export');
+
+        Route::resource('tickets', TicketAdminController::class);
+        Route::get('tickets/export', [TicketAdminController::class, 'export'])->name('tickets.export');
+
+        Route::resource('services', ServiceController::class);
+        Route::get('services/export', [ServiceController::class, 'export'])->name('services.export');
+
+        Route::get('parametrage', [ServiceController::class, 'index'])->name('parametrage');
+
+        Route::resource('categories', CategorieController::class)->except(['show', 'index']);
+        Route::get('categories/export', [CategorieController::class, 'export'])->name('categories.export');
+
+        Route::get('statistiques', [StatistiquesController::class, 'index'])->name('statistiques.index');
+
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+
+        Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+        Route::post('messages', [MessageController::class, 'store'])->name('messages.store');
+        Route::post('messages/{id}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
     });
 
-    // Dashboard chef technicien
-    Route::middleware(['role:' . RolesEnum::CHEF_TECHNICIEN->value])->group(function () {
-        Route::get('/chef/dashboard', [ChefTicketController::class, 'dashboard'])->name('chef.dashboard');
-        Route::get('/chef/tickets-all', [ChefTicketController::class, 'ticketsAll'])->name('chef.tickets.all');
-        Route::get('/chef/tickets/{id}/edit', [ChefTicketController::class, 'edit'])->name('chef.tickets.edit');
-        Route::put('/chef/tickets/{id}', [ChefTicketController::class, 'update'])->name('chef.tickets.update');
-        Route::delete('/chef/tickets/{id}', [ChefTicketController::class, 'destroy'])->name('chef.tickets.destroy');
-        Route::get('/chef/techniciens', [ChefTicketController::class, 'listeTechniciens'])->name('chef.techniciens');
-        Route::get('/chef/tickets/all', [ChefTicketController::class, 'allTickets'])->name('chef.tickets.all');
-        Route::post('/chef/tickets/{id}/assign', [ChefTicketController::class, 'assignTechnicien'])->name('chef.tickets.assign');
-        Route::get('/chef/tickets/export', [ChefTicketController::class, 'export'])->name('chef.tickets.export');
-        Route::get('/techniciens/export/pdf', [TechnicienController::class, 'exportPdf'])->name('techniciens.export.pdf');
+    // ===== Chef Technicien =====
+    Route::middleware(['role:' . RolesEnum::CHEF_TECHNICIEN->value])->prefix('chef')->name('chef.')->group(function () {
+        Route::get('/dashboard', [ChefTicketController::class, 'dashboard'])->name('dashboard');
+        Route::get('/tickets-all', [ChefTicketController::class, 'ticketsAll'])->name('tickets.all');
+        Route::get('/tickets/{id}/edit', [ChefTicketController::class, 'edit'])->name('tickets.edit');
+        Route::put('/tickets/{id}', [ChefTicketController::class, 'update'])->name('tickets.update');
+        Route::delete('/tickets/{id}', [ChefTicketController::class, 'destroy'])->name('tickets.destroy');
+        Route::post('/tickets/{id}/assign', [ChefTicketController::class, 'assignTechnicien'])->name('tickets.assign');
+        Route::get('/tickets/export', [ChefTicketController::class, 'export'])->name('tickets.export');
+        Route::get('/techniciens', [ChefTicketController::class, 'listeTechniciens'])->name('techniciens');
+        Route::get('/tickets/all', [ChefTicketController::class, 'allTickets']);
 
-        Route::prefix('chef/techniciens')->name('chef.techniciens.')->group(function () {
+        Route::prefix('techniciens')->name('techniciens.')->group(function () {
             Route::get('/', [TechnicienController::class, 'index'])->name('index');
+            Route::get('/create', [ChefTicketController::class, 'create'])->name('create');
+            Route::post('/', [ChefTicketController::class, 'storeTechnicien'])->name('store');
             Route::get('/{technicien}/edit', [TechnicienController::class, 'edit'])->name('edit');
             Route::put('/{technicien}', [TechnicienController::class, 'update'])->name('update');
             Route::delete('/{technicien}', [TechnicienController::class, 'destroy'])->name('destroy');
-            Route::get('/create', [ChefTicketController::class, 'create'])->name('create');
         });
 
-        Route::post('/techniciens', [ChefTicketController::class, 'storeTechnicien'])->name('technicien.store');
+        Route::get('/techniciens/export/pdf', [TechnicienController::class, 'exportPdf'])->name('techniciens.export.pdf');
     });
 
-    // Bloc technicien
-    Route::middleware(['role:' . RolesEnum::TECHNICIEN->value])->group(function () {
-        Route::get('/tech/dashboard', function () {
-            return view("tech.dashboard");
-        })->name('tech.dashboard');
+    // ===== Technicien =====
+    Route::middleware(['role:' . RolesEnum::TECHNICIEN->value])->prefix('tech')->name('tech.')->group(function () {
+        Route::get('/dashboard', fn() => view("tech.dashboard"))->name('dashboard');
 
-        Route::get('/tech/tickets', [TicketTechController::class, 'index'])->name('tickets.index');
-        Route::get('/tech/tickets/{id}', [TicketTechController::class, 'show'])->name('tech.tickets.show');
-        Route::get('/tech/tickets/{id}/edit', [TicketTechController::class, 'edit'])->name('tickets.edit');
-        Route::put('/tech/tickets/{id}', [TicketTechController::class, 'update'])->name('tickets.update');
+        Route::get('/tickets', [TicketTechController::class, 'index'])->name('tickets.index');
+        Route::get('/tickets/{id}', [TicketTechController::class, 'show'])->name('tickets.show');
+        Route::get('/tickets/{id}/edit', [TicketTechController::class, 'edit'])->name('tickets.edit');
+        Route::put('/tickets/{id}', [TicketTechController::class, 'update'])->name('tickets.update');
 
-        Route::post('/tech/tickets/{id}/commenter', [TicketTechController::class, 'commenter'])->name('tickets.commenter');
-        Route::put('/tech/commentaires/{id}', [TicketTechController::class, 'updateCommentaire'])->name('commentaires.update');
-        Route::delete('/tech/commentaires/{id}', [TicketTechController::class, 'deleteCommentaire'])->name('commentaires.destroy');
+        Route::post('/tickets/{id}/commenter', [TicketTechController::class, 'commenter'])->name('tickets.commenter');
+        Route::put('/commentaires/{id}', [TicketTechController::class, 'updateCommentaire'])->name('commentaires.update');
+        Route::delete('/commentaires/{id}', [TicketTechController::class, 'deleteCommentaire'])->name('commentaires.destroy');
     });
 
-    // Accessible à tous les rôles authentifiés (par exemple, voir ticket)
+    // Tous rôles authentifiés : voir un ticket
     Route::get('/tickets/{id}', [ChefTicketController::class, 'show'])->name('tickets.show');
 });
