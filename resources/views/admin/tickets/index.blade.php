@@ -19,9 +19,10 @@
         <form method="GET" class="flex gap-2 flex-wrap items-center">
             <select name="status" class="border rounded px-2 py-1 text-sm">
                 <option value="">Tous statuts</option>
-                <option value="ouvert" @if(request('status') == 'ouvert') selected @endif>Ouvert</option>
+                <option value="nouveau" @if(request('status') == 'nouveau') selected @endif>Nouveau</option>
                 <option value="en_cours" @if(request('status') == 'en_cours') selected @endif>En cours</option>
-                <option value="ferme" @if(request('status') == 'ferme') selected @endif>Fermé</option>
+                <option value="résolu" @if(request('status') == 'résolu') selected @endif>Résolu</option>
+                <option value="cloturé" @if(request('status') == 'cloturé') selected @endif>Cloturé</option>
             </select>
             <select name="service_id" class="border rounded px-2 py-1 text-sm">
                 <option value="">Tous services</option>
@@ -57,9 +58,9 @@
                     @php
                         $status = strtolower($ticket->status);
                         $badge = match(true) {
-                            str_contains($status, 'ouvert') || str_contains($status, 'new') || str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle'],
+                            str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle'],
                             str_contains($status, 'en_cours') => ['text' => 'text-yellow-500', 'icon' => 'loader'],
-                            str_contains($status, 'ferme') || str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle'],
+                            str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle'],
                             default => ['text' => 'text-blue-600', 'icon' => 'help-circle'],
                         };
                     @endphp
@@ -105,9 +106,9 @@
                         @php
                             $status = strtolower($ticket->status);
                             $badge = match(true) {
-                                str_contains($status, 'ouvert') || str_contains($status, 'new') || str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle'],
+                                str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle'],
                                 str_contains($status, 'en_cours') => ['text' => 'text-yellow-500', 'icon' => 'loader'],
-                                str_contains($status, 'ferme') || str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle'],
+                                str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle'],
                                 default => ['text' => 'text-blue-600', 'icon' => 'help-circle'],
                             };
                         @endphp

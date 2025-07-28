@@ -18,9 +18,9 @@ class TicketController extends Controller
     public function dashboard()
     {
         $totalTickets = \App\Models\Ticket::count();
-        $openTickets = \App\Models\Ticket::whereIn('status', ['ouvert', 'nouveau', 'new'])->count();
+        $openTickets = \App\Models\Ticket::whereIn('status', ['nouveau'])->count();
         $inProgressTickets = \App\Models\Ticket::where('status', 'en_cours')->count();
-        $closedTickets = \App\Models\Ticket::where('status', 'ferme')->count();
+        $closedTickets = \App\Models\Ticket::whereIn('status', ['cloturé', 'résolu'])->count();
         $latestTickets = \App\Models\Ticket::orderByDesc('created_at')->limit(5)->get();
         $totalUsers = \App\Models\User::where('role', 'user_simple')->count();
         $totalTechniciens = Technicien::count();

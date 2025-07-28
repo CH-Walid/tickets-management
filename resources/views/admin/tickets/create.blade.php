@@ -22,9 +22,10 @@
         <div>
             <label class="block text-gray-700 font-medium mb-1">Statut</label>
             <select name="status" class="w-full border-gray-300 rounded px-3 py-2" required>
-                <option value="ouvert" @if(old('status')==='ouvert') selected @endif>Ouvert</option>
+                <option value="nouveau" @if(old('status')==='nouveau') selected @endif>Nouveau</option>
                 <option value="en_cours" @if(old('status')==='en_cours') selected @endif>En cours</option>
-                <option value="ferme" @if(old('status')==='ferme') selected @endif>Fermé</option>
+                <option value="résolu" @if(old('status')==='résolu') selected @endif>Résolu</option>
+                <option value="cloturé" @if(old('status')==='cloturé') selected @endif>Cloturé</option>
             </select>
         </div>
         <div>

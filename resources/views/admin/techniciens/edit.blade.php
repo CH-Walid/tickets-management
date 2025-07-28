@@ -14,7 +14,7 @@
                 <button type="button" id="change-photo-btn" class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/30 rounded-full" title="Changer la photo">
                     <i data-lucide="pencil" class="w-7 h-7 text-white"></i>
                 </button>
-                @if($photo)
+                @if($technicien->user->photo)
                     <button type="button" id="delete-photo-btn" class="absolute -bottom-3 right-0 bg-white rounded-full shadow p-1 border border-gray-200 hover:bg-red-50 transition flex items-center" title="Supprimer la photo">
                         <i data-lucide="trash-2" class="w-5 h-5 text-red-500"></i>
                     </button>

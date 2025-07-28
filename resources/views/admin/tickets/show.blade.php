@@ -9,9 +9,9 @@
         @php
             $status = strtolower($ticket->status);
             $badge = match(true) {
-                str_contains($status, 'ouvert') || str_contains($status, 'new') || str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle', 'bg'=>'bg-green-100'],
+                str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle', 'bg'=>'bg-green-100'],
                 str_contains($status, 'en_cours') => ['text' => 'text-yellow-500', 'icon' => 'loader', 'bg'=>'bg-yellow-100'],
-                str_contains($status, 'ferme') || str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle', 'bg'=>'bg-gray-100'],
+                str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle', 'bg'=>'bg-gray-100'],
                 default => ['text' => 'text-blue-600', 'icon' => 'help-circle', 'bg'=>'bg-blue-100'],
             };
         @endphp

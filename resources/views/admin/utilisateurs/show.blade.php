@@ -19,8 +19,8 @@
         @php
             $tickets = $utilisateur->userSimple->tickets ?? collect();
             $total = $tickets->count();
-            $open = $tickets->whereIn('status', ['ouvert','en_cours','new','nouveau'])->count();
-            $closed = $tickets->whereIn('status', ['ferme','cloturé','résolu'])->count();
+            $open = $tickets->whereIn('status', ['nouveau','en_cours'])->count();
+            $closed = $tickets->whereIn('status', ['cloturé','résolu'])->count();
         @endphp
         <div class="bg-gray-50 rounded-xl shadow p-6 flex flex-col items-center">
             <span class="text-xs text-gray-400 uppercase mb-1">Tickets</span>
@@ -55,9 +55,9 @@
                             @php
                                 $status = strtolower($ticket->status);
                                 $badge = match(true) {
-                                    str_contains($status, 'ouvert') || str_contains($status, 'new') || str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle'],
+                                    str_contains($status, 'nouveau') => ['text' => 'text-green-600', 'icon' => 'circle'],
                                     str_contains($status, 'en_cours') => ['text' => 'text-yellow-500', 'icon' => 'loader'],
-                                    str_contains($status, 'ferme') || str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle'],
+                                    str_contains($status, 'cloturé') || str_contains($status, 'résolu') => ['text' => 'text-gray-500', 'icon' => 'check-circle'],
                                     default => ['text' => 'text-blue-600', 'icon' => 'help-circle'],
                                 };
                             @endphp

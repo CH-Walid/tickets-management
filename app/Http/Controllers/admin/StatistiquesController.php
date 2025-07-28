@@ -17,9 +17,9 @@ class StatistiquesController extends Controller
     {
         // Stats globales
         $totalTickets = Ticket::count();
-        $openTickets = Ticket::where('status', 'ouvert')->count();
+        $openTickets = Ticket::where('status', 'nouveau')->count();
         $inProgressTickets = Ticket::where('status', 'en_cours')->count();
-        $closedTickets = Ticket::where('status', 'ferme')->count();
+        $closedTickets = Ticket::whereIn('status', ['cloturé', 'résolu'])->count();
         $totalUsers = User::where('role', 'user_simple')->count();
         $totalTechniciens = Technicien::count();
         $totalServices = Service::count();
@@ -61,7 +61,7 @@ class StatistiquesController extends Controller
         $topServices = $ticketsByService->sortByDesc('total')->take(5);
 
         // Délai moyen de résolution (tickets fermés)
-        $avgResolutionTime = Ticket::where('status', 'ferme')
+        $avgResolutionTime = Ticket::whereIn('status', ['cloturé', 'résolu'])
             ->whereNotNull('created_at')
             ->whereNotNull('updated_at')
             ->get()

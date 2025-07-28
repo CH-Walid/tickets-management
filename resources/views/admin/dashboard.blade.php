@@ -79,7 +79,7 @@
                     @foreach($latestTickets as $ticket)
                         <li class="flex items-center gap-2 justify-between bg-gray-50 rounded px-2 py-1 hover:bg-gray-100 transition">
                             <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 {{ $ticket->status == 'ferme' ? 'bg-blue-500' : ($ticket->status == 'ouvert' ? 'bg-green-500' : 'bg-yellow-500') }} rounded-full"></span>
+                                <span class="w-2 h-2 {{ in_array($ticket->status, ['cloturé', 'résolu']) ? 'bg-gray-500' : ($ticket->status == 'nouveau' ? 'bg-green-500' : 'bg-yellow-500') }} rounded-full"></span>
                                 <span class="font-medium">#{{ $ticket->id }}</span>
                                 <span class="text-gray-700">{{ $ticket->titre }}</span>
                                 <span class="text-xs text-gray-400">({{ ucfirst($ticket->status) }})</span>

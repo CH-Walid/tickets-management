@@ -26,9 +26,10 @@
             <div>
                 <label class="block mb-1 text-sm font-medium text-gray-700">Statut</label>
                 <select name="status" class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    <option value="ouvert" @if(old('status', $ticket->status)==='ouvert') selected @endif>Ouvert</option>
+                    <option value="nouveau" @if(old('status', $ticket->status)==='nouveau') selected @endif>Nouveau</option>
                     <option value="en_cours" @if(old('status', $ticket->status)==='en_cours') selected @endif>En cours</option>
-                    <option value="ferme" @if(old('status', $ticket->status)==='ferme') selected @endif>Fermé</option>
+                    <option value="résolu" @if(old('status', $ticket->status)==='résolu') selected @endif>Résolu</option>
+                    <option value="cloturé" @if(old('status', $ticket->status)==='cloturé') selected @endif>Cloturé</option>
                 </select>
             </div>
             <div class="md:col-span-2">
