@@ -21,7 +21,7 @@
     @endif
 
     {{-- ✅ Formulaire de mise à jour du statut --}}
-    <form action="{{ route('tickets.update', $ticket->id) }}" method="POST" class="space-y-6">
+    <form action="{{ route('tech.tickets.update', $ticket->id) }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -74,7 +74,7 @@
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Modifier votre commentaire</h2>
 
             {{-- Formulaire de modification --}}
-            <form action="{{ route('commentaires.update', $commentaire->id) }}" method="POST">
+            <form action="{{ route('tech.commentaires.update', $commentaire->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -88,7 +88,7 @@
             </form>
 
             {{-- Formulaire de suppression --}}
-            <form action="{{ route('commentaires.destroy', $commentaire->id) }}" method="POST"
+            <form action="{{ route('tech.commentaires.destroy', $commentaire->id) }}" method="POST"
                   class="mt-2 flex justify-end"
                   onsubmit="return confirm('Voulez-vous vraiment supprimer ce commentaire ?')">
                 @csrf

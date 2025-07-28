@@ -48,7 +48,7 @@
 
                             <td class="px-6 py-4 flex gap-2">
                                 <a href="{{ route('tech.tickets.show', $ticket->id) }}" class="text-blue-600 hover:underline">Voir</a>
-                                <a href="{{ route('tickets.edit', $ticket->id) }}" class="text-indigo-600 hover:underline">Modifier</a>
+                                <a href="{{ route('tech.tickets.edit', $ticket->id) }}" class="text-indigo-600 hover:underline">Modifier</a>
                             </td>
                         </tr>
                     @empty

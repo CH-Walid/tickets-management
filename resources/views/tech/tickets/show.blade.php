@@ -64,10 +64,10 @@
 
     {{-- Boutons d'action --}}
     <div class="mt-6 flex gap-4">
-        <a href="{{ route('tickets.edit', $ticket->id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+        <a href="{{ route('tech.tickets.edit', $ticket->id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
             Modifier
         </a>
-        <a href="{{ route('tickets.index') }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+        <a href="{{ route('tech.tickets.index') }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
             Retour
         </a>
     </div>
@@ -76,25 +76,14 @@
     <div class="mt-10 border-t pt-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Commentaires</h2>
 
-        {{-- Liste des commentaires --}}
-        <div class="space-y-3">
-            @forelse ($ticket->commentaires as $commentaire)
-                <div class="bg-gray-100 rounded p-4 shadow-sm">
-                    <p class="text-sm text-gray-800">{{ $commentaire->content }}</p>
-                    <p class="text-xs text-gray-500 mt-1">
-                        Par {{ $commentaire->technicien->nom ?? 'Technicien inconnu' }}
-                        — {{ $commentaire->created_at->format('d/m/Y H:i') }}
-                    </p>
-                </div>
-            @empty
-                <p class="text-gray-500 text-sm">Aucun commentaire pour ce ticket.</p>
-            @endforelse
-        </div>
-
         {{-- Formulaire d'ajout de commentaire (une seule fois) --}}
-        @if (! $ticket->commentaires->where('technicien_id', auth()->id())->count())
+        @php
+            $userComment = $ticket->commentaires->where('technicien_id', auth()->id())->first();
+        @endphp
+        
+        @if (!$userComment)
             <div class="mt-6">
-                <form action="{{ route('tickets.commenter', $ticket->id) }}" method="POST">
+                <form action="{{ route('tech.tickets.commenter', $ticket->id) }}" method="POST">
                     @csrf
                     <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Ajouter un commentaire</label>
                     <textarea name="content" id="content" rows="3"
@@ -107,7 +96,13 @@
                 </form>
             </div>
         @else
-            <p class="mt-4 text-sm text-gray-500 italic">Vous avez déjà commenté ce ticket.</p>
+            <div class="mt-6 bg-blue-50 border border-blue-200 rounded p-4">
+                <h3 class="text-sm font-medium text-blue-800 mb-2">Votre commentaire</h3>
+                <p class="text-sm text-blue-700 mb-2">{{ $userComment->contenu }}</p>
+                <p class="text-xs text-blue-600">
+                    Commenté le {{ $userComment->created_at->format('d/m/Y à H:i') }}
+                </p>
+            </div>
         @endif
     </div>
 </div>
