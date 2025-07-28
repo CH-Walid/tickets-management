@@ -3,13 +3,58 @@
 namespace App\Http\Controllers\tech;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Ticket;
 use App\Models\Commentaire;
 use App\Http\Controllers\Controller;
 
 class TicketTechController extends Controller
 {
-    // 🟢 Liste des tickets assignés
+    // � Dashboard pour le technicien
+    public function dashboard()
+    {
+        $technicienId = auth()->id();
+        
+        // Statistiques des tickets assignés au technicien
+        $totalTickets = Ticket::where('technicien_id', $technicienId)->count();
+        $newTickets = Ticket::where('technicien_id', $technicienId)->where('status', 'nouveau')->count();
+        $inProgressTickets = Ticket::where('technicien_id', $technicienId)->where('status', 'en_cours')->count();
+        $resolvedTickets = Ticket::where('technicien_id', $technicienId)->whereIn('status', ['résolu', 'cloturé'])->count();
+        
+        // Tickets récents (derniers 5)
+        $recentTickets = Ticket::with(['categorie', 'userSimple.user'])
+            ->where('technicien_id', $technicienId)
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+            
+        // Tickets urgents non résolus
+        $urgentTickets = Ticket::with(['categorie', 'userSimple.user'])
+            ->where('technicien_id', $technicienId)
+            ->where('priorite', 'urgente')
+            ->whereNotIn('status', ['résolu', 'cloturé'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        // Tickets par priorité
+        $ticketsByPriority = [
+            'basse' => Ticket::where('technicien_id', $technicienId)->where('priorite', 'basse')->count(),
+            'normale' => Ticket::where('technicien_id', $technicienId)->where('priorite', 'normale')->count(),
+            'urgente' => Ticket::where('technicien_id', $technicienId)->where('priorite', 'urgente')->count(),
+        ];
+        
+        return view('tech.dashboard', compact(
+            'totalTickets', 
+            'newTickets', 
+            'inProgressTickets', 
+            'resolvedTickets', 
+            'recentTickets', 
+            'urgentTickets',
+            'ticketsByPriority'
+        ));
+    }
+
+    // �🟢 Liste des tickets assignés
     public function index()
     {
         $tickets = Ticket::with('categorie')->where('technicien_id', auth()->id())->get();

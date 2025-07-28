@@ -142,7 +142,7 @@ Route::middleware(['auth'])->group(function () {
 
     // ===== Technicien =====
     Route::middleware(['role:' . RolesEnum::TECHNICIEN->value])->prefix('tech')->name('tech.')->group(function () {
-        Route::get('/dashboard', fn() => view("tech.dashboard"))->name('dashboard');
+        Route::get('/dashboard', [TicketTechController::class, 'dashboard'])->name('dashboard');
 
         Route::get('/tickets', [TicketTechController::class, 'index'])->name('tickets.index');
         Route::get('/tickets/{id}', [TicketTechController::class, 'show'])->name('tickets.show');
