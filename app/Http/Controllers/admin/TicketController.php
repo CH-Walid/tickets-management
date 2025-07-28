@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\Technicien;
+use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
 {
@@ -88,17 +89,17 @@ class TicketController extends Controller
         ]);
      
         if ($request->hasFile('photo')) {
-            if ($user->photo && $user->photo !== 'avatars/default.png') {
-                \Storage::disk('public')->delete($user->photo);
+            if ($user->img && Storage::disk('public')->exists($user->img)) {
+                Storage::disk('public')->delete($user->img);
             }
-            $imgPath = $request->file('photo')->store('avatars', 'public');
-            $user->photo = $imgPath;
+            $imgPath = $request->file('photo')->store('profile-images', 'public');
+            $user->img = $imgPath;
         }
-        if ($request->has('delete_photo')) {
-            if ($user->photo && $user->photo !== 'avatars/default.png') {
-                \Storage::disk('public')->delete($user->photo);
+        if ($request->has('delete_photo') && $request->input('delete_photo')) {
+            if ($user->img && Storage::disk('public')->exists($user->img)) {
+                Storage::disk('public')->delete($user->img);
             }
-            $user->photo = 'avatars/default.png';
+            $user->img = null;
         }
         $user->nom = $validated['nom'];
         $user->prenom = $validated['prenom'];

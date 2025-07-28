@@ -6,7 +6,7 @@
         @csrf
         <div class="flex flex-col items-center gap-4 mb-8">
             <div class="relative group">
-                @php $photo = Auth::user()->photo ?? null; @endphp
+                @php $photo = Auth::user()->img ?? null; @endphp
                 <div id="avatar-preview-container">
                     <x-user-avatar :user="Auth::user()" size="24" font="2xl" class="w-24 h-24 rounded-full object-cover border-4 border-blue-200 shadow cursor-pointer transition-transform group-hover:scale-105" id="profile-photo-preview" :cacheBuster="time()" />
                 </div>

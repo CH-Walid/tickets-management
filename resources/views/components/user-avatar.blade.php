@@ -7,14 +7,17 @@
 ])
 @php
     use Illuminate\Support\Str;
-    $photoUrl = $user->photo_url ?? '';
+    $photoUrl = $user->profile_image_url ?? '';
     $defaultAvatars = [
         asset('images/default-avatar.png'),
         asset('storage/avatars/default.png'),
         '/images/default-avatar.png',
         '/storage/avatars/default.png',
     ];
-    $isDefault = in_array($photoUrl, $defaultAvatars) || Str::endsWith($photoUrl, '/images/default-avatar.png') || Str::endsWith($photoUrl, '/avatars/default.png');
+    $isDefault = in_array($photoUrl, $defaultAvatars) || 
+                 Str::startsWith($photoUrl, 'data:image/svg+xml') ||
+                 Str::endsWith($photoUrl, '/images/default-avatar.png') || 
+                 Str::endsWith($photoUrl, '/avatars/default.png');
     $colors = [
         'bg-blue-500', 'bg-green-500', 'bg-pink-500', 'bg-purple-500', 'bg-yellow-500', 'bg-red-500', 'bg-teal-500', 'bg-indigo-500', 'bg-orange-500', 'bg-cyan-500',
         'bg-blue-600', 'bg-green-600', 'bg-pink-600', 'bg-purple-600', 'bg-yellow-600', 'bg-red-600', 'bg-teal-600', 'bg-indigo-600', 'bg-orange-600', 'bg-cyan-600',
