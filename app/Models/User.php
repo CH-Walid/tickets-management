@@ -131,9 +131,9 @@ class User extends Authenticatable
     public function getServiceAttribute()
     {
         switch ($this->role) {
-            case 'user':
+            case 'user_simple':
                 return $this->userSimple?->service;
-            case 'tech':
+            case 'technicien':
                 return $this->technicien?->service;
             default:
                 return null;

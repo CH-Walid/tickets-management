@@ -20,13 +20,13 @@ class ProfileController extends Controller
         
         // Charger les relations nécessaires selon le rôle
         switch ($user->role) {
-            case 'user':
+            case 'user_simple':
                 $user->load('userSimple.service');
                 break;
-            case 'tech':
+            case 'technicien':
                 $user->load('technicien.service');
                 break;
-            case 'chef':
+            case 'chef_technicien':
                 $user->load('chefTechnicien');
                 break;
             case 'admin':
@@ -46,13 +46,13 @@ class ProfileController extends Controller
         
         // Charger les relations nécessaires selon le rôle
         switch ($user->role) {
-            case 'user':
+            case 'user_simple':
                 $user->load('userSimple.service');
                 break;
-            case 'tech':
+            case 'technicien':
                 $user->load('technicien.service');
                 break;
-            case 'chef':
+            case 'chef_technicien':
                 $user->load('chefTechnicien');
                 break;
             case 'admin':
@@ -117,11 +117,11 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp,avif', 'max:2048'],
         ], [
             'image.required' => 'Veuillez sélectionner une image.',
             'image.image' => 'Le fichier doit être une image.',
-            'image.mimes' => 'L\'image doit être au format jpeg, png, jpg ou gif.',
+            'image.mimes' => 'L\'image doit être au format jpeg, png, jpg, gif, webp ou avif.',
             'image.max' => 'L\'image ne peut pas dépasser 2MB.',
         ]);
 
@@ -135,11 +135,13 @@ class ProfileController extends Controller
             $imagePath = $request->file('image')->store('profile-images', 'public');
             $user->update(['img' => $imagePath]);
             
+            // Refresh the user instance to get the updated data
+            $user->refresh();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Photo de profil mise à jour avec succès.',
-                'image_url' => $user->profile_image_url // Utilise l'accesseur pour l'URL complète
+                'image_url' => $user->profile_image_url // Use the accessor after refreshing the model
             ]);
 
         } catch (\Exception $e) {
